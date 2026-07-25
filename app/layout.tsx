@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Oxanium, Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geistHeading = Geist({subsets:['latin'],variable:'--font-heading'});
+
+const oxanium = Oxanium({subsets:['latin'],variable:'--font-sans'});
+
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -14,7 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased"
+      className={cn("h-full antialiased", "font-sans", oxanium.variable, geistHeading.variable)}
     >
       <body className="min-h-full flex flex-col">
 
