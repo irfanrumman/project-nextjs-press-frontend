@@ -6,11 +6,14 @@ import { Input } from '@/components/ui/input';
 import { loginAction } from '../_actions/authActions';
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
+// import { useRouter } from 'next/navigation';
 
 
 const loginForm = () => {
 
    const [state, action, pending] = useActionState(loginAction, false)
+
+//    const router = useRouter();
 
    useEffect(() => {
 
@@ -18,6 +21,7 @@ const loginForm = () => {
 
     if(state.success){
         toast.success(state.message || "Login successful");
+        // router.push("/dashboard");
     }
 
     if(!state.success){

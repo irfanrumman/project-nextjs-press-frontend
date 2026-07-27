@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 
 type loginState = {
@@ -31,7 +32,7 @@ export const loginAction = async (prevState: loginState, formData: FormData) => 
         body: JSON.stringify(payload),
     });
 
-    const result : loginState =  await res.json();
+    const result =  await res.json();
     
     if(result.success){
         const cookieStore = await cookies();
@@ -46,6 +47,8 @@ export const loginAction = async (prevState: loginState, formData: FormData) => 
             maxAge: 60 * 60 * 24 * 7,
             sameSite: 'lax',
         });
+
+        redirect("/dashboard", "replace");
     }
     return result;
 }
