@@ -19,10 +19,10 @@ const loginForm = () => {
 
     if (!state) return;
 
-    if(state.success){
-        toast.success(state.message || "Login successful");
-        // router.push("/dashboard");
-    }
+    // if(state.success){
+    //     toast.success(state.message || "Login successful");
+    //     // router.push("/dashboard");
+    // }
 
     if(!state.success){
         toast.error(state.message || "Login failed");

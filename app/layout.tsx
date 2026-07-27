@@ -3,6 +3,7 @@ import "./globals.css";
 import { Oxanium, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { Navbar } from "@/components/shared/navbar";
 
 
 
@@ -27,6 +28,8 @@ export default function RootLayout({
       className={cn("h-full antialiased", "font-sans", oxanium.variable, geistHeading.variable)}
     >
       <body className="min-h-full flex flex-col">
+
+        <Navbar />
 
          <Toaster position="top-right" richColors />
 
