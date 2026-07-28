@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { jwtUtils } from './utils/jwt';
+import { getNewAccessToken } from './service/refreshToken';
  
 
 const AUTH_ROUTES = [
@@ -37,10 +38,34 @@ export async function proxy(request: NextRequest) {
    const cookieStore = await cookies();
 //    const accessToken = cookieStore.get('accessToken')?.value;
       
-     const accessToken = request.cookies.get('accessToken')?.value;
+     let accessToken = request.cookies.get('accessToken')?.value;
+     const refreshToken = request.cookies.get('refreshToken')?.value;
 
     //  const decodedToken = accessToken ? jwt.decode(accessToken) as JwtPayload : null;
-     const decodedToken = accessToken ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string) : null;
+     let decodedAccessToken = accessToken ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string) : null;
+
+     const decodedRefreshToken = refreshToken ? jwtUtils.verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET as string) : null;
+
+
+     if(!decodedAccessToken?.success && decodedRefreshToken?.success){
+        // access is expired but refresh token is valid, get new access token
+        const result = await getNewAccessToken();
+
+        if(result.success){
+            const newAccessToken = result.data.accessToken;
+            cookieStore.set('accessToken', newAccessToken, {
+                httpOnly: true,
+                maxAge: 60 * 60 * 24,
+                sameSite: 'lax',
+            }); 
+
+             //re-assign accessToken after getting new access token
+            accessToken = newAccessToken;
+
+            //re-assign decodedAccessToken after getting new access token
+            decodedAccessToken = jwtUtils.verifyToken(accessToken!, process.env.JWT_ACCESS_SECRET as string);
+        }
+     }
 
      let userRole = null;
 
@@ -48,14 +73,14 @@ export async function proxy(request: NextRequest) {
     //     userRole = decodedToken.role;
     //     }
 
-    if (!decodedToken?.success) {
+    if (!decodedAccessToken?.success) {
         // const cookieStore = await cookies();
         cookieStore.delete("accessToken");
-       return NextResponse.redirect(new URL('/login', request.url));
+    //    return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    if(decodedToken?.success && decodedToken.data){
-        userRole = (decodedToken.data as JwtPayload).role ;
+    if(decodedAccessToken?.success && decodedAccessToken.data){
+        userRole = (decodedAccessToken.data as JwtPayload).role ;
     }
 
 
