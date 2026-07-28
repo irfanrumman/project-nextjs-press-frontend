@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CircleUser } from "lucide-react";
+import { logout } from "@/service/logout";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+
 
 // Navigation items array for easy organization
 const NAV_ITEMS = [
@@ -28,35 +32,10 @@ const USER_MENU_ITEMS = [
   { label: "Billing", href: "/billing" },
 ];
 
-/*
-{
-    "success": true,
-    "statusCode": 200,
-    "message": "User Profile Fetched Successfully",
-    "data": {
-        "profile": {
-            "id": "9807da2f-caed-403b-b3d3-6c5d47c6f404",
-            "name": "Hablu-2",
-            "email": "hablu2@gmail.com",
-            "activestatus": "ACTIVE",
-            "role": "USER",
-            "createdAt": "2026-07-07T17:40:23.286Z",
-            "updatedAt": "2026-07-07T17:40:23.286Z",
-            "profile": {
-                "id": "6f4e7b8e-752a-4a7f-83c0-18d38522f0e2",
-                "profilePhoto": "www.google.com",
-                "bio": null,
-                "userId": "9807da2f-caed-403b-b3d3-6c5d47c6f404",
-                "createdAt": "2026-07-07T17:40:23.365Z",
-                "updatedAt": "2026-07-07T17:40:23.365Z"
-            }
-        }
-    }
-}
-*/
+
 
 type IUser = {
-  Success: boolean;
+  success: boolean;
   message: string;
   data: {
     profile: {
@@ -84,6 +63,45 @@ type NavbarProps = {
 };
 
 export function Navbar({ user }: NavbarProps) {
+
+  console.log(user.success, "user in navbar");
+  const router = useRouter();
+
+  const handleUserMenuAction = async (action: string) => {
+    
+    console.log(`User selected action: ${action}`);
+
+    if (action === "logout") {
+
+      await logout();
+
+      toast.success("User logged out successfully!!");
+
+      // router.push("/login");
+    }
+
+      // setIsLogout(true);
+  }
+
+  //   useEffect(() => {
+   
+  //   if (!user.success) {
+  //     toast.success("User logged out!!");
+  //   }
+
+  // }, [user.success]);
+  //   useEffect(() => {
+   
+  //   if (isLogout) {
+  //     toast.success("User logged out successfully!!");
+
+  //     router.push("/login");
+  //   }
+
+  // }, [isLogout, router]);
+  
+
+
   return (
     <nav className="border-b bg-background">
       <div className="mx-auto max-w-7xl px-4 py-4">
@@ -107,7 +125,9 @@ export function Navbar({ user }: NavbarProps) {
           </div>
 
           {/* User Dropdown */}
-          <DropdownMenu>
+         {
+          user.success ? (
+             <DropdownMenu>
             <DropdownMenuTrigger asChild>
               {/* <Button
                 variant="ghost"
@@ -143,9 +163,31 @@ export function Navbar({ user }: NavbarProps) {
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={async() => {
+                await handleUserMenuAction("logout");
+              }
+
+              }>
+
+                <span
+                >
+                  Log Out
+                </span>
+
+
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          ) : 
+            <Link
+              href="/login"
+            >
+              <Button className="cursor-pointer">
+                Login
+                </Button>
+            </Link>
+          
+         }
         </div>
       </div>
     </nav>
