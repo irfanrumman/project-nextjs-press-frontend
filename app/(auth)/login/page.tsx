@@ -1,32 +1,32 @@
 
-import LoginForm from '../_components/loginForm';
+// import LoginForm from '../_components/loginForm';
 
 
-const LoginPage = () => {
+// const LoginPage = () => {
 
  
-  return (
-   <>
-   <div className="flex min-h-screen items-center justify-center">
-    <div className="w-full max-w-md space-y-6 rounded-lg border p-8 shadow-lg">
+//   return (
+//    <>
+//    <div className="flex min-h-screen items-center justify-center">
+//     <div className="w-full max-w-md space-y-6 rounded-lg border p-8 shadow-lg">
 
-      {/* form generic text */}
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold">Welcome Back!</h1>
-        <p className="text-gray-500">
-          Enter your credentials to access your account.
-        </p>
-      </div>
+//       {/* form generic text */}
+//       <div className="space-y-2 text-center">
+//         <h1 className="text-2xl font-bold">Welcome Back!</h1>
+//         <p className="text-gray-500">
+//           Enter your credentials to access your account.
+//         </p>
+//       </div>
 
-      {/* form */}
-      <LoginForm />
+//       {/* form */}
+//       <LoginForm />
 
 
 
-    </div>
-   </div>
-   </>
-  )
-}
+//     </div>
+//    </div>
+//    </>
+//   )
+// }
 
-export default LoginPage
+// export default LoginPage
